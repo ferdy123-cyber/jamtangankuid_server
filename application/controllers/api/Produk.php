@@ -25,15 +25,21 @@ class Produk extends REST_Controller
 
     function index_get()
     {
-        $param = $this->get();
-        if (count($param) == 0) {
+        $name = $this->get('name');
+        $limit = $this->get('limit');
+        $offset = $this->get('offset');
+        if ($name) {
+            $this->db->like('name', $name);
             $this->db->order_by('updatedAt', 'DESC');
-            $api = $this->db->get('produk', 0, 0)->result();
+            $api = $this->db->get('produk', $limit, $offset)->result();
+            $this->db->like('name', $name);
+            $total = $this->db->get('produk')->num_rows();
         } else {
-            $this->db->where($param);
-            $api = $this->db->get('produk')->result();
+            $total = $this->db->get('produk')->num_rows();
+            $this->db->order_by('updatedAt', 'DESC');
+            $api = $this->db->get('produk', $limit, $offset)->result();
         }
-        $this->response(['message' => 'success', 'data' => $api, 'status' => 200], 200);
+        $this->response(['message' => 'success', 'data' => $api, 'status' => 200, 'limit' => $limit, 'offset' => $offset, 'total' => $total], 200);
     }
     function index_put()
     {
@@ -76,6 +82,9 @@ class Produk extends REST_Controller
                 'name' => $this->post('name'),
                 'price' => $this->post('price'),
                 'description' => $this->post('description'),
+                'promo' => 'N',
+                'rekomended' => 'N',
+                'price_promo' => 0,
                 'image' => '/images/' . $res['file_name']
             ];
             $insert = $this->db->insert('produk', $data);
@@ -87,5 +96,49 @@ class Produk extends REST_Controller
         } else {
             $this->response(['message' => 'error upload'], 502);
         }
+    }
+    function rekomended_get()
+    {
+        $name = $this->get('name');
+        $limit = $this->get('limit');
+        $offset = $this->get('offset');
+        if ($name) {
+            $this->db->like('name', $name);
+            $this->db->order_by('updatedAt', 'DESC');
+            $this->db->where(['rekomended' => 'Y']);
+            $api = $this->db->get('produk',  $limit, $offset)->result();
+            $this->db->like('name', $name);
+            $this->db->where(['rekomended' => 'Y']);
+            $total = $this->db->get('produk')->num_rows();
+        } else {
+            $this->db->where(['rekomended' => 'Y']);
+            $total = $this->db->get('produk')->num_rows();
+            $this->db->order_by('updatedAt', 'DESC');
+            $this->db->where(['rekomended' => 'Y']);
+            $api = $this->db->get('produk', $limit, $offset)->result();
+        }
+        $this->response(['message' => 'success', 'data' => $api, 'status' => 200, 'limit' => $limit, 'offset' => $offset, 'total' => $total], 200);
+    }
+    function promo_get()
+    {
+        $name = $this->get('name');
+        $limit = $this->get('limit');
+        $offset = $this->get('offset');
+        if ($name) {
+            $this->db->like('name', $name);
+            $this->db->order_by('updatedAt', 'DESC');
+            $this->db->where(['promo' => 'Y']);
+            $api = $this->db->get('produk',  $limit, $offset)->result();
+            $this->db->like('name', $name);
+            $this->db->where(['promo' => 'Y']);
+            $total = $this->db->get('produk')->num_rows();
+        } else {
+            $this->db->where(['promo' => 'Y']);
+            $total = $this->db->get('produk')->num_rows();
+            $this->db->order_by('updatedAt', 'DESC');
+            $this->db->where(['promo' => 'Y']);
+            $api = $this->db->get('produk', $limit, $offset)->result();
+        }
+        $this->response(['message' => 'success', 'data' => $api, 'status' => 200, 'limit' => $limit, 'offset' => $offset, 'total' => $total], 200);
     }
 }
