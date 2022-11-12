@@ -41,6 +41,24 @@ class Produk extends REST_Controller
         }
         $this->response(['message' => 'success', 'data' => $api, 'status' => 200, 'limit' => $limit, 'offset' => $offset, 'total' => $total], 200);
     }
+    function sort_terlaris_get()
+    {
+        $name = $this->get('name');
+        $limit = $this->get('limit');
+        $offset = $this->get('offset');
+        if ($name) {
+            $this->db->like('name', $name);
+            $this->db->order_by('amount_of_selling', 'DESC');
+            $api = $this->db->get('produk', $limit, $offset)->result();
+            $this->db->like('name', $name);
+            $total = $this->db->get('produk')->num_rows();
+        } else {
+            $total = $this->db->get('produk')->num_rows();
+            $this->db->order_by('updatedAt', 'DESC');
+            $api = $this->db->get('produk', $limit, $offset)->result();
+        }
+        $this->response(['message' => 'success', 'data' => $api, 'status' => 200, 'limit' => $limit, 'offset' => $offset, 'total' => $total], 200);
+    }
     function index_put()
     {
         $id = $this->uri->segment("3");
@@ -81,10 +99,12 @@ class Produk extends REST_Controller
             $data = [
                 'name' => $this->post('name'),
                 'price' => $this->post('price'),
+                'stok' => $this->post('stok'),
                 'description' => $this->post('description'),
                 'promo' => 'N',
                 'rekomended' => 'N',
                 'price_promo' => 0,
+                'amount_of_selling' => 0,
                 'image' => '/images/' . $res['file_name']
             ];
             $insert = $this->db->insert('produk', $data);
