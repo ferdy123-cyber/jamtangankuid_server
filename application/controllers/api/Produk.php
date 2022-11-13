@@ -30,7 +30,7 @@ class Produk extends REST_Controller
         $offset = $this->get('offset');
         if ($name) {
             $this->db->like('name', $name);
-            $this->db->order_by('updatedAt', 'DESC');
+            $this->db->order_by('id', 'DESC');
             $api = $this->db->get('produk', $limit, $offset)->result();
             $this->db->like('name', $name);
             $total = $this->db->get('produk')->num_rows();
@@ -64,7 +64,7 @@ class Produk extends REST_Controller
             $total = $this->db->get('produk')->num_rows();
         } else {
             $total = $this->db->get('produk')->num_rows();
-            $this->db->order_by('updatedAt', 'DESC');
+            $this->db->order_by('amount_of_selling', 'DESC');
             $api = $this->db->get('produk', $limit, $offset)->result();
         }
         $this->response(['message' => 'success', 'data' => $api, 'status' => 200, 'limit' => $limit, 'offset' => $offset, 'total' => $total], 200);
