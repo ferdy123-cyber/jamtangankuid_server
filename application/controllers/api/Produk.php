@@ -41,6 +41,16 @@ class Produk extends REST_Controller
         }
         $this->response(['message' => 'success', 'data' => $api, 'status' => 200, 'limit' => $limit, 'offset' => $offset, 'total' => $total], 200);
     }
+    function detail_get()
+    {
+        $id = $this->uri->segment("4");
+        $api = $this->db->get_where('produk', ['id' => $id])->result();
+        if (count($api) != 0) {
+            $this->response(['message' => 'success', 'data' => $api[0], 'status' => 200], 200);
+        } else {
+            $this->response(['message' => 'produk tidak ditemukan'], 200);
+        }
+    }
     function sort_terlaris_get()
     {
         $name = $this->get('name');
