@@ -134,7 +134,7 @@ class Produk extends REST_Controller
         $offset = $this->get('offset');
         if ($name) {
             $this->db->like('name', $name);
-            $this->db->order_by('updatedAt', 'DESC');
+            $this->db->order_by('id', 'DESC');
             $this->db->where(['rekomended' => 'Y']);
             $api = $this->db->get('produk',  $limit, $offset)->result();
             $this->db->like('name', $name);
@@ -143,7 +143,7 @@ class Produk extends REST_Controller
         } else {
             $this->db->where(['rekomended' => 'Y']);
             $total = $this->db->get('produk')->num_rows();
-            $this->db->order_by('updatedAt', 'DESC');
+            $this->db->order_by('id', 'DESC');
             $this->db->where(['rekomended' => 'Y']);
             $api = $this->db->get('produk', $limit, $offset)->result();
         }
@@ -156,7 +156,7 @@ class Produk extends REST_Controller
         $offset = $this->get('offset');
         if ($name) {
             $this->db->like('name', $name);
-            $this->db->order_by('updatedAt', 'DESC');
+            $this->db->order_by('id', 'DESC');
             $this->db->where(['promo' => 'Y']);
             $api = $this->db->get('produk',  $limit, $offset)->result();
             $this->db->like('name', $name);
@@ -165,7 +165,7 @@ class Produk extends REST_Controller
         } else {
             $this->db->where(['promo' => 'Y']);
             $total = $this->db->get('produk')->num_rows();
-            $this->db->order_by('updatedAt', 'DESC');
+            $this->db->order_by('id', 'DESC');
             $this->db->where(['promo' => 'Y']);
             $api = $this->db->get('produk', $limit, $offset)->result();
         }
