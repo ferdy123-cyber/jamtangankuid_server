@@ -40,6 +40,25 @@ class Cart extends REST_Controller
 
         $this->response(['message' => 'success', 'data' => $api, 'status' => 200, 'limit' => $limit, 'offset' => $offset, 'total' => $total], 200);
     }
+
+    function getAll_get()
+    {
+        $limit = $this->get('limit');
+        $offset = $this->get('offset');
+        $data = $this->get();
+        $this->db->where($data);
+        $total = $this->db->get('cart')->num_rows();
+        $this->db->select('*');
+        $this->db->from('cart');
+        $this->db->join('produk', 'produk.id = cart.produk_id');
+        $this->db->where($data);
+        $this->db->order_by('cart_id', 'DESC');
+        $this->db->limit($limit, $offset);
+        $api = $this->db->get()->result();
+
+        $this->response(['message' => 'success', 'data' => $api, 'status' => 200, 'limit' => $limit, 'offset' => $offset, 'total' => $total], 200);
+    }
+
     function index_delete()
     {
         $id = $this->uri->segment("3");
@@ -67,7 +86,8 @@ class Cart extends REST_Controller
         $data = $this->post();
         $cekcart = $this->db->get_where('cart', [
             'produk_id' => $data['produk_id'],
-            'user_id' => $data['user_id']
+            'user_id' => $data['user_id'],
+            'transaction_id' => 0
         ])->result();
         if (count($cekcart) >= 1) {
             $produk = $this->db->get_where('produk', ['id' => $data['produk_id']])->result()[0];
