@@ -69,4 +69,15 @@ class Transaksi extends REST_Controller
             $this->response(['message' => "gagal menambah transaksi"], 502);
         }
     }
+    function index_put()
+    {
+        $id = $this->uri->segment("3");
+        $data = $this->put();
+        $update = $this->db->update('transaksi', $data, ['id' => $id]);
+        if ($update) {
+            $this->response(['message' => 'update berhasil', 'data' => $data], 200);
+        } else {
+            $this->response(['message' => 'pembayaran gagal'], 502);
+        }
+    }
 }
